@@ -6,13 +6,13 @@ plugins {
 }
 
 android {
-    namespace = "com.example.plexplayerprep"
+    namespace = "com.example.mediaplayerprep"
     compileSdk {
         version = release(36)
     }
 
     defaultConfig {
-        applicationId = "com.example.plexplayerprep"
+        applicationId = "com.example.mediaplayerprep"
         minSdk = 26
         targetSdk = 36
         versionCode = 1

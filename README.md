@@ -1,17 +1,17 @@
-# Plex Player Prep
+# Media Player Prep
 
 An Android media streaming sample built to practice topics that matter for a senior player/client role: adaptive streaming, Media3/ExoPlayer integration, custom playback state, diagnostics, caching, feed playback, lifecycle cleanup, and testable presentation logic.
 
 ## How To Run
 
-Open `PlexPlayerPrep` in Android Studio and run the `app` configuration on an emulator or device with internet access.
+Open `MediaPlayerPrep` in Android Studio and run the `app` configuration on an emulator or device with internet access.
 
 From this machine:
 
 ```sh
 JAVA_HOME="/Applications/Android Studio.app/Contents/jbr/Contents/Home" \
 ANDROID_HOME=/Users/david/Library/Android/sdk \
-GRADLE_USER_HOME=/Users/david/AndroidStudioProjects/PlexPlayerPrep/.gradle-user-home \
+GRADLE_USER_HOME=/Users/david/AndroidStudioProjects/MediaPlayerPrep/.gradle-user-home \
 ./gradlew testDebugUnitTest
 ```
 

@@ -2,11 +2,11 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
-        android:name=".PlexPrepApplication"
+        android:name=".MediaPrepApplication"
         android:allowBackup="true"
-        android:label="Plex Player Prep"
+        android:label="Media Player Prep"
         android:supportsRtl="true"
-        android:theme="@style/Theme.PlexPlayerPrep">
+        android:theme="@style/Theme.MediaPlayerPrep">
         <activity
             android:name=".MainActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
