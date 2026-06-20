@@ -19,5 +19,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Media Player Prep"
+rootProject.name = "ABR sample"
 include(":app")

@@ -68,7 +68,7 @@ fun HomeScreen(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Column {
-                    Text("Media Player Prep", style = MaterialTheme.typography.headlineMedium, fontWeight = FontWeight.Bold)
+                    Text("ABR Sample", style = MaterialTheme.typography.headlineMedium, fontWeight = FontWeight.Bold)
                     Text("Media3 streaming, diagnostics, cache, and feed playback", color = MaterialTheme.colorScheme.onSurfaceVariant)
                 }
                 Button(onClick = onOpenFeed) {

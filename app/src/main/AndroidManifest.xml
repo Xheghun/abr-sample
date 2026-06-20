@@ -4,7 +4,7 @@
     <application
         android:name=".MediaPrepApplication"
         android:allowBackup="true"
-        android:label="Media Player Prep"
+        android:label="ABR Sample"
         android:supportsRtl="true"
         android:theme="@style/Theme.MediaPlayerPrep">
         <activity

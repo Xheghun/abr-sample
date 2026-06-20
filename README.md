@@ -1,19 +1,10 @@
 # Media Player Prep
 
-An Android media streaming sample built to practice topics that matter for a senior player/client role: adaptive streaming, Media3/ExoPlayer integration, custom playback state, diagnostics, caching, feed playback, lifecycle cleanup, and testable presentation logic.
+An Android media streaming sample built to practice adaptive streaming, Media3/ExoPlayer integration, custom playback state, diagnostics, caching, feed playback, lifecycle cleanup, and testable presentation logic.
 
 ## How To Run
 
 Open `MediaPlayerPrep` in Android Studio and run the `app` configuration on an emulator or device with internet access.
-
-From this machine:
-
-```sh
-JAVA_HOME="/Applications/Android Studio.app/Contents/jbr/Contents/Home" \
-ANDROID_HOME=/Users/david/Library/Android/sdk \
-GRADLE_USER_HOME=/Users/david/AndroidStudioProjects/MediaPlayerPrep/.gradle-user-home \
-./gradlew testDebugUnitTest
-```
 
 ## Architecture
 
@@ -56,21 +47,10 @@ For codec issues, compare the selected track format against device decoder suppo
 
 ## React Native Integration Sketch
 
-A React Native app would usually expose this native layer as a view manager plus a command/event bridge:
+A React Native app would usually expose this native layer as a view manager plus an event bridge:
 
 - Native view wraps `PlayerView` and a `PlayerController`.
 - JS props provide media URL, stream type, autoplay, muted, speed, and selected text/audio track.
 - JS commands call play, pause, seek, retry, setMuted, and setPlaybackSpeed.
 - Native events emit playback state, errors, progress, buffering, diagnostics, and track changes.
 - The native layer should keep ExoPlayer ownership and lifecycle rules on Android; JS should not directly manage player instances.
-
-For a larger app, create a player service/factory owned by the native module and use stable player IDs so JS can coordinate full-screen, mini-player, casting, and feed cells without leaking native players.
-
-## Study Next
-
-- Media3 track selection, `LoadControl`, `AnalyticsListener`, and offline downloads.
-- ABR behavior and how buffer health, bandwidth, and viewport size influence variant selection.
-- DRM with Widevine, license renewal, offline licenses, and failure modes.
-- Subtitle formats: WebVTT, TTML, CEA-608/708, styling, and accessibility.
-- Player lifecycle in feeds, background playback, audio focus, PiP, casting, and full-screen handoff.
-- Observability: structured playback telemetry, startup funnels, CDN correlation, and device-specific codec analytics.
