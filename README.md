@@ -4,7 +4,7 @@ An Android media streaming sample built to practice adaptive streaming, Media3/E
 
 ## How To Run
 
-Open `MediaPlayerPrep` in Android Studio and run the `app` configuration on an emulator or device with internet access.
+Open the project in Android Studio and run the `app` configuration on an emulator or device with internet access.
 
 ## Architecture
 
@@ -54,3 +54,4 @@ A React Native app would usually expose this native layer as a view manager plus
 - JS commands call play, pause, seek, retry, setMuted, and setPlaybackSpeed.
 - Native events emit playback state, errors, progress, buffering, diagnostics, and track changes.
 - The native layer should keep ExoPlayer ownership and lifecycle rules on Android; JS should not directly manage player instances.
+
