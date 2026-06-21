@@ -3,13 +3,14 @@ package com.example.mediaplayerprep.player
 import android.content.Context
 import android.os.SystemClock
 import androidx.media3.common.C
+import androidx.media3.common.Format
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MimeTypes
 import androidx.media3.common.PlaybackException
 import androidx.media3.common.Player
-import androidx.media3.common.TrackSelectionOverride
 import androidx.media3.common.Tracks
 import androidx.media3.common.util.UnstableApi
+import androidx.media3.exoplayer.DecoderReuseEvaluation
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.analytics.AnalyticsListener
 import androidx.media3.exoplayer.source.DefaultMediaSourceFactory
@@ -68,8 +69,8 @@ class ExoPlayerController(
         override fun onRenderedFirstFrame(eventTime: AnalyticsListener.EventTime, output: Any, renderTimeMs: Long) {
             if (!firstFrameRendered) {
                 firstFrameRendered = true
-                val ttf = loadStartedAtMs?.let { SystemClock.elapsedRealtime() - it }
-                _snapshot.update { it.copy(diagnostics = it.diagnostics.copy(timeToFirstFrameMs = ttf)) }
+                val timeToFirstFrameMs = loadStartedAtMs?.let { SystemClock.elapsedRealtime() - it }
+                _snapshot.update { it.copy(diagnostics = it.diagnostics.copy(timeToFirstFrameMs = timeToFirstFrameMs)) }
             }
         }
 
@@ -84,10 +85,10 @@ class ExoPlayerController(
 
         override fun onVideoInputFormatChanged(
             eventTime: AnalyticsListener.EventTime,
-            format: androidx.media3.common.Format,
-            decoderReuseEvaluation: androidx.media3.exoplayer.DecoderReuseEvaluation?
+            format: Format,
+            decoderReuseEvaluation: DecoderReuseEvaluation?
         ) {
-            lastBitrate = format.bitrate.takeIf { it != androidx.media3.common.Format.NO_VALUE }
+            lastBitrate = format.bitrate.takeIf { it != Format.NO_VALUE }
             publishSnapshot()
         }
     }
