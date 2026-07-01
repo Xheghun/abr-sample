@@ -47,6 +47,7 @@ import androidx.media3.common.util.UnstableApi
 import androidx.media3.ui.PlayerView
 import com.example.mediaplayerprep.data.InMemoryVideoCatalog
 import com.example.mediaplayerprep.player.PlaybackStatus
+import com.example.mediaplayerprep.player.PlaybackTuning
 import com.example.mediaplayerprep.player.PlayerControllerFactory
 import com.example.mediaplayerprep.player.PlayerSnapshot
 
@@ -156,6 +157,58 @@ fun PlayerControls(snapshot: PlayerSnapshot, onAction: (PlayerAction) -> Unit) {
                 )
             }
         }
+        AbrControls(snapshot = snapshot, onAction = onAction)
+    }
+}
+
+@Composable
+private fun AbrControls(snapshot: PlayerSnapshot, onAction: (PlayerAction) -> Unit) {
+    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        Text("ABR tuning", style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.Bold)
+        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            AssistChip(
+                onClick = { onAction(PlayerAction.ApplyTuning(PlaybackTuning.DataSaver)) },
+                label = { Text("Data saver") }
+            )
+            AssistChip(
+                onClick = { onAction(PlayerAction.ApplyTuning(PlaybackTuning.Balanced)) },
+                label = { Text("Balanced") }
+            )
+            AssistChip(
+                onClick = { onAction(PlayerAction.ApplyTuning(PlaybackTuning.HighQuality)) },
+                label = { Text("High quality") }
+            )
+        }
+        Text(
+            text = "Current: ${snapshot.tuning.summary}",
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            style = MaterialTheme.typography.bodySmall
+        )
+        Text("Quality override", style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.Bold)
+        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            AssistChip(
+                onClick = { onAction(PlayerAction.SelectAutoQuality) },
+                label = { Text(if (snapshot.manualQualityLabel == null) "Auto selected" else "Auto") }
+            )
+        }
+        if (snapshot.qualityOptions.isEmpty()) {
+            Text(
+                text = "Manual qualities appear after the manifest and tracks are available.",
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                style = MaterialTheme.typography.bodySmall
+            )
+        } else {
+            Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                snapshot.qualityOptions.forEach { option ->
+                    AssistChip(
+                        onClick = { onAction(PlayerAction.SelectQuality(option.id)) },
+                        label = {
+                            Text(if (option.isSelected) "${option.label} selected" else option.label)
+                        }
+                    )
+                }
+            }
+        }
     }
 }
 
@@ -177,13 +230,17 @@ fun DebugPanel(snapshot: PlayerSnapshot) {
     Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
         Text("Diagnostics", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
         Text("Bitrate: ${d.bitrate?.let { "${it / 1000} kbps" } ?: "unknown"}")
+        Text("Bandwidth estimate: ${d.bandwidthEstimate?.let { "${it / 1000} kbps" } ?: "unknown"}")
         Text("Dropped frames: ${d.droppedFrames}")
         Text("Video: ${d.selectedVideoTrack}")
         Text("Audio: ${d.selectedAudioTrack}")
         Text("Text: ${d.selectedTextTrack}")
+        Text("Custom codec: ${d.customCodec?.summary ?: "not probed"}")
         Text("Position: ${d.playbackPositionMs} ms")
         Text("Buffered: ${d.bufferedPositionMs} ms")
         Text("Player state: ${d.playerState}")
+        Text("Manual quality: ${snapshot.manualQualityLabel ?: "Auto ABR"}")
+        Text("ABR constraints: ${snapshot.tuning.summary}")
         Text("Time to first frame: ${d.timeToFirstFrameMs?.let { "$it ms" } ?: "pending"}")
         Text("Captions: one HLS item attaches a WebVTT sidecar; production apps should surface Media3 text track selection.")
     }

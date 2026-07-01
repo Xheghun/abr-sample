@@ -8,6 +8,7 @@ import com.example.mediaplayerprep.domain.SampleVideo
 import com.example.mediaplayerprep.domain.StreamType
 import com.example.mediaplayerprep.domain.VideoCatalog
 import com.example.mediaplayerprep.player.PlaybackStatus
+import com.example.mediaplayerprep.player.PlaybackTuning
 import com.example.mediaplayerprep.player.PlayerController
 import com.example.mediaplayerprep.player.PlayerSnapshot
 import kotlinx.coroutines.Dispatchers
@@ -63,6 +64,26 @@ class PlayerViewModelTest {
 
         assertThat(controller.pauseCount).isEqualTo(1)
     }
+
+    @Test
+    fun `applying tuning delegates ABR constraints to controller`() = runTest {
+        val controller = FakePlayerController()
+        val viewModel = PlayerViewModel("video-1", FakeCatalog, controller)
+
+        viewModel.onAction(PlayerAction.ApplyTuning(PlaybackTuning.DataSaver))
+
+        assertThat(controller.lastTuning).isEqualTo(PlaybackTuning.DataSaver)
+    }
+
+    @Test
+    fun `selecting quality delegates manual override to controller`() = runTest {
+        val controller = FakePlayerController()
+        val viewModel = PlayerViewModel("video-1", FakeCatalog, controller)
+
+        viewModel.onAction(PlayerAction.SelectQuality("0:2"))
+
+        assertThat(controller.selectedQualityId).isEqualTo("0:2")
+    }
 }
 
 private object FakeCatalog : VideoCatalog {
@@ -83,6 +104,9 @@ private class FakePlayerController : PlayerController {
     private val mutableSnapshot = MutableStateFlow(PlayerSnapshot())
     var retryCount = 0
     var pauseCount = 0
+    var lastTuning: PlaybackTuning? = null
+    var selectedQualityId: String? = null
+    var selectedAutoQualityCount = 0
 
     override val player: ExoPlayer
         get() = error("Fake does not expose an ExoPlayer")
@@ -103,6 +127,15 @@ private class FakePlayerController : PlayerController {
     override fun seekTo(positionMs: Long) = Unit
     override fun setMuted(muted: Boolean) = Unit
     override fun setPlaybackSpeed(speed: Float) = Unit
+    override fun setPlaybackTuning(tuning: PlaybackTuning) {
+        lastTuning = tuning
+    }
+    override fun selectAutoQuality() {
+        selectedAutoQualityCount++
+    }
+    override fun selectQuality(optionId: String) {
+        selectedQualityId = optionId
+    }
     override fun preload(video: SampleVideo) = Unit
     override fun release() = Unit
 }

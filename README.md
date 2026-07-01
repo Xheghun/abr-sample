@@ -25,33 +25,16 @@ The UI never owns raw player behavior. It renders immutable state from ViewModel
 - Playback state model: idle, loading, buffering, ready/paused, playing, ended, error.
 - User-friendly error message plus technical details in the debug panel.
 - Diagnostics: bitrate when available, dropped frames, selected audio/video/text track, position, buffered position, player state, and time-to-first-frame.
+- ABR tuning: explicit `DefaultTrackSelector`, max/min bitrate constraints, preferred resolution/viewport, custom `LoadControl`, custom `DefaultBandwidthMeter`, and manual quality overrides.
+- Custom codec extension point: a small NDK/C++ demo decoder is built with CMake, loaded through JNI, and surfaced in the debug panel as a native codec probe.
 - Media3 `SimpleCache` through `CacheDataSource.Factory`, capped with LRU eviction.
 - Preloading demo: the next item is prepared with a secondary player to warm manifests, track metadata, and cache.
 - Vertical feed mode using a single active player; inactive pages release player resources. Mute state is preserved by the shared controller factory inside the feed.
 - Captions: one HLS sample attaches a sidecar WebVTT subtitle. Production apps should expose text track selection from Media3 `Tracks`.
-- JVM tests for playback state mapping, reducer behavior, and retry/play-pause ViewModel behavior.
+- tests for playback state mapping, reducer behavior, and retry/play-pause ViewModel behavior.
 
 ## HLS And DASH
 
 HLS uses an `.m3u8` manifest and segments that can be selected adaptively based on bandwidth and buffer health. DASH uses an `.mpd` manifest with similar adaptive representations. In both cases the player loads a manifest, selects tracks/variants, fetches segments, decodes audio/video, and adapts as network and decoder conditions change.
 
 The important client responsibilities are startup behavior, seek behavior, error handling, buffering policy, track selection, cache policy, lifecycle cleanup, and surfacing enough diagnostics to debug real playback failures.
-
-## Debugging Latency, Buffering, And Codec Issues
-
-For startup latency, measure time from `load()` to first rendered frame, then split the problem into DNS/TLS, manifest load, playlist updates, segment download, decoder init, and first frame render.
-
-For buffering, inspect selected bitrate, buffered duration, bandwidth estimates, dropped frames, CDN errors, segment size, and whether the ABR algorithm selected too aggressively.
-
-For codec issues, compare the selected track format against device decoder support, DRM requirements, profile/level, resolution, HDR format, and audio channel layout. In production, persist structured playback sessions so failures can be grouped by device, stream, CDN, codec, and app version.
-
-## React Native Integration Sketch
-
-A React Native app would usually expose this native layer as a view manager plus an event bridge:
-
-- Native view wraps `PlayerView` and a `PlayerController`.
-- JS props provide media URL, stream type, autoplay, muted, speed, and selected text/audio track.
-- JS commands call play, pause, seek, retry, setMuted, and setPlaybackSpeed.
-- Native events emit playback state, errors, progress, buffering, diagnostics, and track changes.
-- The native layer should keep ExoPlayer ownership and lifecycle rules on Android; JS should not directly manage player instances.
-

@@ -2,10 +2,12 @@ package com.example.mediaplayerprep.player
 
 data class PlayerDiagnostics(
     val bitrate: Int? = null,
+    val bandwidthEstimate: Long? = null,
     val droppedFrames: Int = 0,
     val selectedVideoTrack: String = "unknown",
     val selectedAudioTrack: String = "unknown",
     val selectedTextTrack: String = "none",
+    val customCodec: CustomCodecInfo? = null,
     val playbackPositionMs: Long = 0L,
     val bufferedPositionMs: Long = 0L,
     val playerState: String = "Idle",

@@ -41,6 +41,8 @@ Expose a native player view plus commands and events. JS owns intent and layout,
 ## Concepts Demonstrated
 
 - Media3 ExoPlayer setup for HLS and DASH.
+- Explicit ABR tuning with `DefaultTrackSelector`, bitrate/resolution constraints, `DefaultLoadControl`, `DefaultBandwidthMeter`, and manual `TrackSelectionOverride`.
+- NDK/JNI custom codec extension point with a native decoder probe and diagnostics.
 - `CacheDataSource` and `SimpleCache` configuration.
 - Custom playback state mapping from Media3 state.
 - `AnalyticsListener` diagnostics: first frame and dropped frames.
@@ -55,7 +57,8 @@ Expose a native player view plus commands and events. JS owns intent and layout,
 
 - No DRM or license flow.
 - No real backend catalog, auth, resume position sync, or watch history.
-- No production-grade ABR tuning or custom `LoadControl`.
+- Custom codec support is a native extension point and probe, not a production Media3 renderer for real encoded media.
+- ABR presets are sample-level; production tuning would need A/B testing and telemetry validation per device/network cohort.
 - Feed mode uses one active player rather than a tuned pre-warmed player pool.
 - Subtitle UI is diagnostic only; it does not yet expose user track selection.
 - Fullscreen is a simple orientation toggle, not a complete immersive full-screen player shell.
@@ -64,9 +67,10 @@ Expose a native player view plus commands and events. JS owns intent and layout,
 ## Future Improvements
 
 - Add Widevine DRM samples and license diagnostics.
+- Add a full Media3 custom renderer that feeds encoded samples into the native decoder and renders decoded frames.
 - Add track selection UI for audio, video quality, and text tracks.
 - Persist playback sessions and resume positions.
-- Add configurable `LoadControl` and startup bitrate strategy.
+- Add startup bitrate experiments and persist ABR decisions as structured telemetry.
 - Add offline downloads with Media3 download service.
 - Add PiP, audio focus, noisy-audio handling, and media session controls.
 - Add Compose UI tests for home, player controls, and feed active-item behavior.

@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.mediaplayerprep.domain.SampleVideo
 import com.example.mediaplayerprep.domain.VideoCatalog
+import com.example.mediaplayerprep.player.PlaybackTuning
 import com.example.mediaplayerprep.player.PlayerController
 import com.example.mediaplayerprep.player.PlayerSnapshot
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -27,6 +28,9 @@ sealed interface PlayerAction {
     data object ToggleFullscreen : PlayerAction
     data class SeekTo(val positionMs: Long) : PlayerAction
     data class SetSpeed(val speed: Float) : PlayerAction
+    data class ApplyTuning(val tuning: PlaybackTuning) : PlayerAction
+    data object SelectAutoQuality : PlayerAction
+    data class SelectQuality(val optionId: String) : PlayerAction
 }
 
 class PlayerViewModel(
@@ -58,8 +62,11 @@ class PlayerViewModel(
             PlayerAction.Retry -> controller.retry()
             PlayerAction.ToggleDebugPanel -> _state.update(PlayerScreenReducer::toggleDebugPanel)
             PlayerAction.ToggleFullscreen -> _state.update(PlayerScreenReducer::toggleFullscreen)
+            PlayerAction.SelectAutoQuality -> controller.selectAutoQuality()
             is PlayerAction.SeekTo -> controller.seekTo(action.positionMs)
             is PlayerAction.SetSpeed -> controller.setPlaybackSpeed(action.speed)
+            is PlayerAction.ApplyTuning -> controller.setPlaybackTuning(action.tuning)
+            is PlayerAction.SelectQuality -> controller.selectQuality(action.optionId)
         }
     }
 

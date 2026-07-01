@@ -10,5 +10,8 @@ data class PlayerSnapshot(
     val bufferedPositionMs: Long = 0L,
     val userMessage: String? = null,
     val technicalError: String? = null,
-    val diagnostics: PlayerDiagnostics = PlayerDiagnostics()
+    val diagnostics: PlayerDiagnostics = PlayerDiagnostics(),
+    val tuning: PlaybackTuning = PlaybackTuning.Balanced,
+    val qualityOptions: List<QualityOption> = emptyList(),
+    val manualQualityLabel: String? = null
 )

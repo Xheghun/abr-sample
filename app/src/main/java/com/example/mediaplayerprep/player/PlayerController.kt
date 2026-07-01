@@ -15,6 +15,9 @@ interface PlayerController {
     fun seekTo(positionMs: Long)
     fun setMuted(muted: Boolean)
     fun setPlaybackSpeed(speed: Float)
+    fun setPlaybackTuning(tuning: PlaybackTuning)
+    fun selectAutoQuality()
+    fun selectQuality(optionId: String)
     fun preload(video: SampleVideo)
     fun release()
 }
